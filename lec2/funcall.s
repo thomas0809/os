@@ -54,31 +54,31 @@ root/usr/funcall.c  11: {
 root/usr/funcall.c  12:   int i;
 root/usr/funcall.c  13:   ret = 1;
 00000010  fffff801  ENT   0xfffffff8 (D -8)
-00000014  00000123  LI    0x1 (D 1)
-00000018  00000045  SG    0x0 (D 0)
+00000014  00000123  LI    0x1 (D 1)              // a = 1
+00000018  00000045  SG    0x0 (D 0)              // ret = a
 root/usr/funcall.c  14:   i=n;
-0000001c  0000200e  LL    0x20 (D 32)
-00000020  00000440  SL    0x4 (D 4)
+0000001c  0000200e  LL    0x20 (D 32)            // a = *(sp + 32)
+00000020  00000440  SL    0x4 (D 4)              // *(sp + 4) = a
 root/usr/funcall.c  15:   while (i--)
 00000024  00000003  JMP   <fwd>
 root/usr/funcall.c  16:     out(f, *s++);
-00000028  0000180e  LL    0x18 (D 24)
-0000002c  ffffff57  SUBI  0xffffffff (D -1)
-00000030  00001840  SL    0x18 (D 24)
-00000034  ffffff1f  LXC   0xffffffff (D -1)
-00000038  0000009d  PSHA
-0000003c  0000180e  LL    0x18 (D 24)
-00000040  0000009d  PSHA
-00000044  ffffb805  JSR   0xffffffb8 (TO 0x0)
-00000048  00001001  ENT   0x10 (D 16)
+00000028  0000180e  LL    0x18 (D 24)            // a = *(sp + 24)
+0000002c  ffffff57  SUBI  0xffffffff (D -1)      // a -= 1
+00000030  00001840  SL    0x18 (D 24)            // *(sp + 24) = a
+00000034  ffffff1f  LXC   0xffffffff (D -1)      // 取出字符
+00000038  0000009d  PSHA                         // 压入栈中
+0000003c  0000180e  LL    0x18 (D 24)            
+00000040  0000009d  PSHA                         // 压入f
+00000044  ffffb805  JSR   0xffffffb8 (TO 0x0)    // 保存当前pc，调用out
+00000048  00001001  ENT   0x10 (D 16)            // 弹栈
 root/usr/funcall.c  17:   return i;
-0000004c  0000040e  LL    0x4 (D 4)
-00000050  00000157  SUBI  0x1 (D 1)
-00000054  00000440  SL    0x4 (D 4)
-00000058  00000154  ADDI  0x1 (D 1)
-0000005c  00000086  BNZ   <fwd>
+0000004c  0000040e  LL    0x4 (D 4)              // 取出i （sp＋4）
+00000050  00000157  SUBI  0x1 (D 1)              // i--
+00000054  00000440  SL    0x4 (D 4)              // 保存i
+00000058  00000154  ADDI  0x1 (D 1)              // a = 减1前的i
+0000005c  00000086  BNZ   <fwd>                  // a!=0 时循环
 00000060  0000040e  LL    0x4 (D 4)
-00000064  00000802  LEV   0x8 (D 8)
+00000064  00000802  LEV   0x8 (D 8)              // 返回
 root/usr/funcall.c  18: }  
 root/usr/funcall.c  19: 
 root/usr/funcall.c  20: main()
@@ -87,10 +87,10 @@ root/usr/funcall.c  21: {
 root/usr/funcall.c  22: 
 root/usr/funcall.c  23:   //Change S1/S2 ID to your student ID, and change 12 to new str length
 root/usr/funcall.c  24:   ret = write(1, "2013011372 2013011367",21);
-0000006c  0000159e  PSHI  0x15 (D 21)
-00000070  00000008  LEAG  0x0 (D 0)
-00000074  0000009d  PSHA
-00000078  0000019e  PSHI  0x1 (D 1)
+0000006c  0000159e  PSHI  0x15 (D 21)            // 压入21
+00000070  00000008  LEAG  0x0 (D 0)              // a = pc
+00000074  0000009d  PSHA                         // 压入pc
+00000078  0000019e  PSHI  0x1 (D 1)              // 压入1
 0000007c  ffff9005  JSR   0xffffff90 (TO 0x10)
 00000080  00001801  ENT   0x18 (D 24)
 00000084  00000045  SG    0x0 (D 0)
