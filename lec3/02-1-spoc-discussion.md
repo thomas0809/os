@@ -39,7 +39,7 @@
      - read: 读文件
      - open: 打开文件
      - access: 判断文件是否存在
-     - evecve: 启动新的程序
+     - evecve: 运行文件
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。
