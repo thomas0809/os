@@ -66,12 +66,18 @@
   - getpid的实现如下，直接返回pid。
    
    ```
-   static int   sys_getpid(uint32_t arg[]) {
-		return current->pid;   }
+   static int
+   sys_getpid(uint32_t arg[]) {
+		return current->pid;
+   }
    ```
  1. 以ucore lab8的answer为例，分析ucore 应用的系统调用编写和含义。
   - 在`usr/ulib.h`中声明了一些涉及系统调用的函数，比如`fork`、`getpid`、`fprintf`等，这些函数调用用户态的`sys_fork(void)`等函数，具体见`usr/syscall.h`；
   - 各个函数统一通过用户态的`syscall(int num, ...)`，使用`asm volatile`机制，将参数保存到寄存器中，然后用`int`指令进入内核态处理系统调用；
   - 内核态`syscall(void)`函数取出系统调用类型和参数，完成之后将返回值通过`%eax`返回，具体过程见第一题。
  1. 以ucore lab8的answer为例，尝试修改并运行ucore OS kernel代码，使其具有类似Linux应用工具`strace`的功能，即能够显示出应用程序发出的系统调用，从而可以分析ucore应用的系统调用执行过程。
- 
+  - 在内核态代码syscall.c中，加入cprintf输出系统调用的编号。
+   ```
+   cprintf("SYSCALL: %d\n", num);
+   ```
+  - 其中num为tf->tf_regs.reg_eax，在unistd.h中定义。
