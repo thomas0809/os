@@ -30,16 +30,9 @@
  ```
   - strace用于观察程序运行过程中的系统调用情况，其中包含有每个系统调用过程(syscall)的运行时间(seconds)、所占比例(%time)、调用次数(usecs/call)以及出现错误次数(errors)等。
 
-  - 执行程序printf("hello world\n")，包含的系统调用为:
-     - mmap: 使得进程之间通过映射同一个普通文件实现共享内存
-     - fstat: 由文件描述次取得文件状态
-     - mprotect: 用来修改一段指定内存区域的保护属性
-     - write: 向标准输出写
-     - munmap: 接触内存映射，与mmap相对应
-     - read: 读文件
-     - open: 打开文件
-     - access: 判断文件是否存在
-     - execve: 运行文件
+  - 执行程序printf("hello world\n")，执行的系统调用包括execve、mprotect、fstat、brk、mmap、open、close、access、munmap、write、read、arch_prctl。
+ 
+  - 程序首先调用execve，即执行文件，通过brk分配内存。接下来通过access、fstat等操作链接动态库，并利用open、close、read等进行文件操作。通过mmap来映射文件实现共享内存，mprotect修改内存的保护属性，最后调用write进行输出。程序执行完毕后，通过munmap解除内存映射，close关闭文件，exit_group退出程序。
  
 ## 3.5 ucore系统调用分析
  1. ucore的系统调用中参数传递代码分析。
