@@ -80,4 +80,4 @@
    ```
    cprintf("SYSCALL: %d\n", num);
    ```
-  - 其中num为tf->tf_regs.reg_eax，在unistd.h中定义。
+  - 其中num为tf->tf_regs.reg_eax，系统调用与编号的对应在unistd.h中定义。
