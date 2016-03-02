@@ -51,10 +51,20 @@
  - 程序：
  - `lab1_switch_test(void)` 函数中有内核态与核心态的切换，即通过`int T_SWITCH_TOU`和`int T_SWITCH_TOK`来切换。修改该函数如下
 
-	```
+	```c
 	static void
  	lab1_switch_test(void) {
- 		lab1_print_cur_status();    	print_stackframe();    	cprintf("+++ switch to  user  mode +++\n");    	lab1_switch_to_user();    	lab1_print_cur_status();    	print_stackframe();    	cprintf("+++ switch to kernel mode +++\n");    	lab1_switch_to_kernel();    	lab1_print_cur_status();    	print_stackframe();	}
+ 		lab1_print_cur_status();
+    	print_stackframe();
+    	cprintf("+++ switch to  user  mode +++\n");
+    	lab1_switch_to_user();
+    	lab1_print_cur_status();
+    	print_stackframe();
+    	cprintf("+++ switch to kernel mode +++\n");
+    	lab1_switch_to_kernel();
+    	lab1_print_cur_status();
+    	print_stackframe();
+	}
 	```
  - 即在进入中断之前用`print_stackfram()`打印栈帧，在`trap.c`中也在处理这两个中断的时候打印栈帧。结果如下所示：
  - 内核态 => 内核态（堆栈没有切换）
