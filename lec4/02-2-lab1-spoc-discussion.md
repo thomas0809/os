@@ -53,10 +53,13 @@ GDT内容的设置格式？初始映射的基址和长度？特权级的设置�
 
   - 访问条件：max(RPL,CPL)<=DPL
   
-  输出CPL程序：
+  - 输出CPL程序：
   
-  ```
-  int cs = 0;  asm volatile("movl %%cs, %0\n" : "=r"(cs));  cs &= 3;  cprintf("user mode CPL: %d\n", cs);
+  ```c
+  int cs = 0;
+  asm volatile("movl %%cs, %0\n" : "=r"(cs));
+  cs &= 3;
+  cprintf("user mode CPL: %d\n", cs);
   ```
   在syscall.c中，同样输出CPL。
   结果如下：
