@@ -9,11 +9,46 @@ struct node{              // 链表的数据结构，用于维护内存块的信
 	void* first;
 	char dirty;
 	struct node* next;
+	struct node* pred;
 };
 
 struct node *start;
 void *p;
 
+void swap(struct node *n1, struct node *n2) 
+{
+	n1->next = n2->next;
+	n2->pred = n1->pred;
+	n1->pred = n2;
+	n2->next = n1;
+	if (n1->pred == NULL)
+		start = n2;
+}
+
+void check(struct node *n)
+{
+	while (n->next != NULL && n->size > n->next->size) {
+		swap(n, n->next);
+	}
+	while (n->pred != NULL && n->size < n->pred->size) {
+		swap(n->pred, n);
+	}
+}
+
+void remove(struct node *n) //删除一个节点ßßß
+{
+	if(n->pred == NULL) {
+		start = n->next;
+		start->pred = NULL;
+	}
+	else if(n->next == NULL) {
+		n->pred->next = NULL;
+	}
+	else {
+		n->next->pred = n->pred;
+		n->pred->next = n->next;
+	}
+}
 
 void *mymalloc(int size) // 申请内存
 {
@@ -24,6 +59,7 @@ void *mymalloc(int size) // 申请内存
 		start->first = p;
 		start->dirty = 0;
 		start->next = NULL;
+		start->pred = NULL;
 	}
 
 	struct node *temp = start;
@@ -34,9 +70,13 @@ void *mymalloc(int size) // 申请内存
 			temp2->first = temp->first + size;
 			temp2->dirty = 0;
 			temp2->next = temp->next;
+			temp2->pred = temp;
+			temp2->next->pred = temp2;
 			temp->size -= size;
 			temp->dirty = 1;
 			temp->next = temp2;
+			check(temp);
+			check(temp2);
 			return temp->first;
 		}
 		else if(temp->size == size && temp->dirty == 0) {
@@ -55,20 +95,23 @@ int myfree(void *pt) // 释放内存
 	while(temp != NULL) {
 		if (temp->first == pt && temp->dirty == 1) {  // 在链表中找到需要释放的内存块
 			temp->dirty = 0;
-			if (temp->next != NULL && temp->next->dirty == 0) { // 与后面的内存块合并
-				temp->size += temp->next->size;
-				succ = temp->next;
-				temp->next = temp->next->next;
-				//free(succ);
+			struct node *temp2 = start;
+			while (temp2 != NULL) {
+				if (temp2->first == pt + temp->size && temp2->dirty == 0) { // 与后面的内存块合并
+					temp->size += temp2->size;
+					remove(temp2);
+				}
+				if (temp2->first + temp2->size == pt && temp2->dirty == 0) {  // 与前面的内存快合并
+					temp->size += temp2->size;
+					temp->first = temp2->first;
+					remove(temp2);
+					//free(temp);
+				}
+				temp2 = temp2->next;
 			}
-			if (pred != NULL && pred->dirty == 0) {  // 与前面的内存快合并
-				pred->size += temp->size;
-				pred->next = temp->next;
-				//free(temp);
-			}
+			check(temp);
 			return 1;
 		}
-		pred = temp;
 		temp = temp->next;
 	}
 	return 0;
