@@ -27,10 +27,10 @@ void swap(struct node *n1, struct node *n2)
 
 void check(struct node *n)
 {
-	while (n->next != NULL && n->size > n->next->size) {
+	while (n->next != NULL && n->size < n->next->size) {
 		swap(n, n->next);
 	}
-	while (n->pred != NULL && n->size < n->pred->size) {
+	while (n->pred != NULL && n->size > n->pred->size) {
 		swap(n->pred, n);
 	}
 }
@@ -83,6 +83,8 @@ void *mymalloc(int size) // 申请内存
 			temp->dirty = 1;
 			return temp->first;
 		}
+		if (temp->dirty == 0)
+			break;
 		temp = temp->next;
 	}
 	return NULL;
