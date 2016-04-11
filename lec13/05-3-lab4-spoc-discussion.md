@@ -52,12 +52,22 @@ tf.tf_eip = (uint32_t) kernel_thread_entry;
 /kern/process/entry.S
 ```
 
+> 第一条指令为“pushl %edx”。在kernel_thread函数中设置trapframe中的reg\_rbx为函数入口地址,reg\_edx为函数参数。在进程切换后进入entry.s执行：
+
+```
+    pushl %edx              # push arg
+    call *%ebx              # call fn
+```
+
 (6)内核线程的堆栈初始化在哪？
 ```
 tf和context中的esp
 ```
+> 在do\_fork函数中调用setup\_kstack函数，进行内核堆栈的初始化
 
 (7)fork()父子进程的返回值是不同的。这在源代码中的体现中哪？
+
+> get\_pid函数，通过遍历链表找到唯一的pid返回给新的线程
 
 (8)内核线程initproc的第一次执行流程是什么样的？能跟踪出来吗？
 
