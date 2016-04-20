@@ -500,6 +500,7 @@ do_exit(int error_code) {
     }
     local_intr_restore(intr_flag);
     
+    cprintf(">>>>> proc %d exit.\n", current->pid);
     schedule();
     panic("do_exit will not return!! %d.\n", current->pid);
 }
