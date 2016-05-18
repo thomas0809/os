@@ -12,7 +12,6 @@
  5. `cons_putc(int c)`
  6. `lpt_putc(int c)`并口输出；`cga_putc(int c)`屏幕输出；`serial_putc(int c)`串口输出
  7. 以下4个函数调用，生成4个outb汇编语句
-
  
     ```c
     outb(addr_6845, 14);    outb(addr_6845 + 1, crt_pos >> 8);    outb(addr_6845, 15);    outb(addr_6845 + 1, crt_pos);
